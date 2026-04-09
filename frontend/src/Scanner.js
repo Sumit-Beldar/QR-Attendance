@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
-function Scanner() {
-  const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
+function Scanner() {
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
       "reader",

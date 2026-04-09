@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import Scanner from "./Scanner";
 import "./App.css";
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 function App() {
   const [mode, setMode] = useState("teacher"); // teacher or student
   const [qr, setQr] = useState("");
-
-  const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
   useEffect(() => {
     const generateQR = async () => {
