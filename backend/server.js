@@ -16,6 +16,8 @@ app.use(express.json()); // IMPORTANT
 
 // Routes
 app.use("/api/auth", authRoutes);
+const qrRoutes = require("./routes/qrRoutes");
+app.use("/api/qr", qrRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
@@ -23,9 +25,7 @@ app.get("/", (req, res) => {
 });
 
 // Start Server
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-const qrRoutes = require("./routes/qrRoutes");
-
-app.use("/api/qr", qrRoutes);

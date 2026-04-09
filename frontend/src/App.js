@@ -1,24 +1,27 @@
 import { useState, useEffect } from "react";
 import Scanner from "./Scanner";
+import "./App.css";
 
 function App() {
   const [mode, setMode] = useState("teacher"); // teacher or student
   const [qr, setQr] = useState("");
 
-  const generateQR = async () => {
-    const res = await fetch("http://localhost:5000/api/qr/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ lectureId: "math101" })
-    });
-
-    const data = await res.json();
-    setQr(data.qr);
-  };
+  const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
   useEffect(() => {
+    const generateQR = async () => {
+      const res = await fetch(`${API_BASE_URL}/api/qr/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ lectureId: "math101" })
+      });
+
+      const data = await res.json();
+      setQr(data.qr);
+    };
+
     if (mode === "teacher") {
       generateQR();
 
@@ -31,24 +34,44 @@ function App() {
   }, [mode]);
 
   return (
-    <div style={{ textAlign: "center", marginTop: "30px" }}>
-      <h1>QR Attendance System</h1>
+    <main className="app-container">
+      <header className="app-header">
+        <h1 className="app-title">QR Attendance System</h1>
+        <p className="app-subtitle">Seamless tracking for modern classrooms</p>
+      </header>
 
-      {/* Mode Switch */}
-      <button onClick={() => setMode("teacher")}>Teacher View</button>
-      <button onClick={() => setMode("student")}>Student View</button>
+      <div className="controls">
+        <button 
+          className={`btn ${mode === "teacher" ? "btn-primary active" : "btn-secondary"}`} 
+          onClick={() => setMode("teacher")}
+        >
+          Teacher View
+        </button>
+        <button 
+          className={`btn ${mode === "student" ? "btn-primary active" : "btn-secondary"}`} 
+          onClick={() => setMode("student")}
+        >
+          Student View
+        </button>
+      </div>
 
-      {/* Teacher View */}
-      {mode === "teacher" && (
-        <div>
-          <h2>Scan this QR</h2>
-          {qr && <img src={qr} alt="QR Code" />}
-        </div>
-      )}
+      <article className="glass-panel">
+        {mode === "teacher" && (
+          <div className="qr-container">
+            <h2 className="qr-title">Scan this QR code to mark your attendance</h2>
+            {qr ? (
+              <div className="qr-image-wrapper">
+                <img src={qr} alt="Attendance QR Code" />
+              </div>
+            ) : (
+              <p className="placeholder-text">Generating fresh QR code...</p>
+            )}
+          </div>
+        )}
 
-      {/* Student View */}
-      {mode === "student" && <Scanner />}
-    </div>
+        {mode === "student" && <Scanner />}
+      </article>
+    </main>
   );
 }
 
